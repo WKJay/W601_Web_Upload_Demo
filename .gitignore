@@ -42,3 +42,4 @@ Bin/
 *.scvd
 !/libraries/**
 !/tools/**
+.rtt-studio

@@ -23,6 +23,8 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
+#define VERSION "V1.0.1"
+
 /**
  * Name:    json_create_web_response
  * Brief:   创建一个web响应
@@ -63,7 +65,7 @@ void cgi_handshake(struct webnet_session *session) {
     cJSON_AddItemToObject(root, "code", cJSON_CreateNumber(0));
     cJSON_AddItemToObject(root, "handshake", handshake);
 
-    cJSON_AddItemToObject(handshake, "version", cJSON_CreateString("V1.0.1"));
+    cJSON_AddItemToObject(handshake, "version", cJSON_CreateString(VERSION));
     cJSON_AddItemToObject(handshake, "support_firmwareupload", cJSON_CreateBool(1));
     cJSON_AddItemToObject(handshake, "support_fileupload", cJSON_CreateBool(0));
     cJSON_AddItemToObject(handshake, "support_directoryupload", cJSON_CreateBool(0));
