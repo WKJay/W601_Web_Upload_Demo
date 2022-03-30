@@ -2,25 +2,23 @@
  Copyright (c) 2022
  All rights reserved.
  File name:     web_utils.c
- Description:   
+ Description:
  History:
- 1. Version:    
+ 1. Version:
     Date:       2022-03-21
     Author:     WKJay
-    Modify:     
+    Modify:
 *************************************************/
 
 #include <rtthread.h>
 #include <dfs_posix.h>
-#include "wn_module.h"
+
 #include "web_utils.h"
 #include "web.h"
 
 #define DBG_TAG "webutils"
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
-
-#define MAX_FILENAME_LENGTH 128
 
 static uint32_t crc32_tab[] = {
     0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L, 0x706af48fL, 0xe963a535L,
@@ -250,7 +248,7 @@ int create_file_by_path(char *path) {
     char path_buff[MAX_FILENAME_LENGTH];
     rt_memset(path_buff, 0, sizeof(path_buff));
 
-    length = strlen(path);
+    length = rt_strlen(path);
     for (int i = 0; i < length; i++) {
         path_buff[i] = path[i];
 
@@ -269,4 +267,38 @@ int create_file_by_path(char *path) {
         }
     }
     return -1;
+}
+
+//格式化SD卡
+int disk_sd0_clean(void) {
+    if (dfs_mkfs("elm", "sd0") < 0) {
+        LOG_E("mkfs fail");
+        return -1;
+    } else {
+        LOG_I("mkfs success");
+        return 0;
+    }
+}
+
+const char *get_file_name(struct webnet_session *session) {
+    const char *path = RT_NULL, *path_last = RT_NULL;
+    path_last = webnet_upload_get_filename(session);
+    if (path_last == RT_NULL) {
+        LOG_E("invalid file name.");
+        return RT_NULL;
+    }
+
+    path = strrchr(path_last, '\\');
+    if (path != RT_NULL) {
+        path++;
+        path_last = path;
+    }
+
+    path = strrchr(path_last, '/');
+    if (path != RT_NULL) {
+        path++;
+        path_last = path;
+    }
+
+    return path_last;
 }

@@ -2,12 +2,12 @@
  Copyright (c) 2022
  All rights reserved.
  File name:     web.c
- Description:   
+ Description:
  History:
- 1. Version:    
+ 1. Version:
     Date:       2022-03-21
     Author:     WKJay
-    Modify:     
+    Modify:
 *************************************************/
 
 #include "web.h"
@@ -24,9 +24,13 @@
 static void _init_thread(void *param) {
     /* add firmware upload entry */
     webnet_upload_add(&upload_bin_upload);
+    webnet_upload_add(&upload_file_upload);
+    webnet_upload_add(&upload_dir_upload);
 
     webnet_cgi_register("handshake", cgi_handshake);
     webnet_cgi_register("get_diskfree", cgi_diskfree);
+    webnet_cgi_register("diskclean", cgi_diskclean);
+    webnet_cgi_register("upload_check", cgi_check_files);
 
     /* start WebNet */
     web_file_init();

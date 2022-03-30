@@ -19,6 +19,8 @@
 #include <webnet.h>
 #include <wn_module.h>
 
+#include "web_utils.h"
+
 #include "fal.h"
 
 uint8_t firm_upload_done = 0;
@@ -30,31 +32,6 @@ uint8_t firm_upload_done = 0;
  */
 static int file_size = 0;
 
-
-static const char *get_file_name(struct webnet_session *session) {
-    const char *path = RT_NULL, *path_last = RT_NULL;
-
-    path_last = webnet_upload_get_filename(session);
-    if (path_last == RT_NULL) {
-        rt_kprintf("file name err!!\n");
-        return RT_NULL;
-    }
-
-    path = strrchr(path_last, '\\');
-    if (path != RT_NULL) {
-        path++;
-        path_last = path;
-    }
-
-    path = strrchr(path_last, '/');
-    if (path != RT_NULL) {
-        path++;
-        path_last = path;
-    }
-
-    return path_last;
-}
-
 static int upload_open(struct webnet_session *session) {
     const struct fal_partition *part = RT_NULL;
     const char *file_name = RT_NULL;
@@ -65,7 +42,6 @@ static int upload_open(struct webnet_session *session) {
     if (webnet_upload_get_filename(session) != RT_NULL) {
         part = fal_partition_find("download");
         if (part == RT_NULL) {
-            // webnet_session_close(session);
             goto _exit;
         }
         fal_partition_erase_all(part);
@@ -100,7 +76,7 @@ static int upload_done(struct webnet_session *session) {
     static char status[100];
 
     /* get mimetype */
-    mimetype = mime_get_type(".html");
+    mimetype = mime_get_type("json");
 
     /* set http header */
     session->request->result_code = 200;

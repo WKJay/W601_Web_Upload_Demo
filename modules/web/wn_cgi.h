@@ -4,9 +4,13 @@
 #include <webnet.h>
 
 extern const struct webnet_module_upload_entry upload_bin_upload;
+extern const struct webnet_module_upload_entry upload_file_upload;
+extern const struct webnet_module_upload_entry upload_dir_upload;
 
 extern void cgi_get_version(struct webnet_session *session);
 extern void cgi_check_files(struct webnet_session *session);
 extern void cgi_handshake(struct webnet_session *session);
 extern void cgi_diskfree(struct webnet_session *session);
+extern void cgi_diskclean(struct webnet_session *session);
+extern void cgi_check_files(struct webnet_session *session);
 #endif
